@@ -29,8 +29,9 @@ const generateResetToken= () => {
 
 
 const generateIdToken = (user, clientId) => {
+    const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
     const payload = {
-        iss: "http://localhost:3000",        // Your server URL
+        iss: BASE_URL,        // Your server URL
         sub: user._id.toString(),            // The User's ID
         aud: clientId || "default_client",   // The Application receiving it
         email: user.email,

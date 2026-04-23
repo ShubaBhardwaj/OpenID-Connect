@@ -11,12 +11,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
 app.use('/.well-known/openid-configuration', (req, res) => {
+    const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
     return res.status(200).json({
-        "issuer": "http://localhost:3000",
-        "authorization_endpoint": "http://localhost:3000/api/auth/register",
-        "token_endpoint": "http://localhost:3000/api/auth/login",
-        "userinfo_endpoint": "http://localhost:3000/api/auth/me",
-        "jwks_uri": "http://localhost:3000/.well-known/jwks.json",
+        "issuer": BASE_URL,
+        "authorization_endpoint": `${BASE_URL}/api/auth/register`,
+        "token_endpoint": `${BASE_URL}/api/auth/login`,
+        "userinfo_endpoint": `${BASE_URL}/api/auth/me`,
+        "jwks_uri": `${BASE_URL}/.well-known/jwks.json`,
         "response_types_supported": ["code", "token", "id_token"],
         "subject_types_supported": ["public"],
         "id_token_signing_alg_values_supported": ["HS256"],
