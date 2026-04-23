@@ -1,5 +1,7 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import fs from 'fs';
+import jose from 'node-jose';
 import authRoutes from "./modules/auth/auth.routes.js";
 
 const app = express()
@@ -24,9 +26,16 @@ app.use('/.well-known/openid-configuration', (req, res) => {
     })
 })
 
-app.use('/.well-known/jwks.json', (req, res) => {
-    const key = await jose.JWK.asKey(PUBLIC_KEY, "pem");
-    return res.json({ keys: [key.toJSON()] });
+
+app.use('/.well-known/jwks.json', async (req, res) => {
+    try {
+        const PUBLIC_KEY = fs.readFileSync('./cert/public-key.pub', 'utf8');
+        const key = await jose.JWK.asKey(PUBLIC_KEY, "pem");
+        return res.json({ keys: [key.toJSON()] });
+    } catch (err) {
+        console.error("Failed to parse JWKS", err);
+        return res.status(500).json({ error: "Failed to load keys" });
+    }
 })
 
 app.use('/api/auth', authRoutes)

@@ -28,7 +28,7 @@ const generateResetToken= () => {
 }
 
 
-export const generateIdToken = (user, clientId) => {
+const generateIdToken = (user, clientId) => {
     const payload = {
         iss: "http://localhost:3000",        // Your server URL
         sub: user._id.toString(),            // The User's ID
